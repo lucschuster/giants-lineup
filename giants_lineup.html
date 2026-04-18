@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Giants Lineup</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a3a5c;
+      --navy-dark: #0f2840;
+      --green: #2d6a2d;
+      --green-light: #e8f5e9;
+      --red: #c62828;
+      --gold: #e65100;
+      --gold-light: #fff3e0;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --muted: #666;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #app { max-width: 580px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .app-header {
+      background: var(--navy);
+      color: white;
+      padding: 14px 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .app-header h1 { font-size: 1.2rem; font-weight: 700; }
+
+    .tab-bar { display: flex; background: var(--navy-dark); }
+    .tab-btn {
+      flex: 1; padding: 11px; border: none; background: transparent;
+      color: rgba(255,255,255,0.5); font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab-btn.active { color: white; border-bottom-color: #64b5f6; }
+
+    .content { flex: 1; padding: 14px; }
+
+    .card { background: var(--card); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    .btn {
+      display: block; width: 100%; padding: 13px 16px; border: none;
+      border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
+      text-align: center; transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); opacity: 0.88; }
+    .btn-primary { background: var(--navy); color: white; }
+    .btn-success { background: var(--green); color: white; }
+    .btn-danger { background: var(--red); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-sm { padding: 8px 14px; font-size: 0.87rem; width: auto; display: inline-block; border-radius: 7px; }
+    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .flex-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+    .empty { text-align: center; padding: 44px 24px; color: var(--muted); }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty h3 { font-size: 1rem; font-weight: 600; color: #444; margin-bottom: 6px; }
+    .empty p { font-size: 0.86rem; line-height: 1.5; }
+
+    .pname { font-weight: 600; font-size: 1rem; }
+    .ppos { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    .gtitle { font-weight: 600; font-size: 1rem; }
+    .gdetail { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .badge { flex-shrink: 0; font-size: 0.73rem; font-weight: 700; padding: 4px 9px; border-radius: 12px; }
+    .badge-ready { background: var(--green-light); color: var(--green); }
+    .badge-none { background: var(--gold-light); color: var(--gold); }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 5px; background: none; border: none;
+      color: var(--navy); font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      padding: 0; margin-bottom: 12px;
+    }
+
+    .sh { font-size: 0.73rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; margin-top: 16px; }
+    .sh:first-child { margin-top: 0; }
+
+    .divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+    .alert { padding: 10px 14px; border-radius: 8px; font-size: 0.86rem; line-height: 1.5; margin-bottom: 12px; }
+    .alert-warn { background: var(--gold-light); border: 1px solid #ffcc80; color: #7a3d00; }
+    .alert-err  { background: #ffebee; border: 1px solid #ef9a9a; color: #b71c1c; }
+    .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; }
+
+    .absent-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px;
+      cursor: pointer; user-select: none; margin-bottom: 6px;
+    }
+    .absent-item.away { border-color: #ef9a9a; background: #ffebee; }
+    .absent-name { font-size: 0.9rem; font-weight: 500; }
+    .absent-tag { font-size: 0.75rem; font-weight: 700; }
+    .away .absent-tag { color: var(--red); }
+    .here .absent-tag { color: var(--green); }
+
+    .rot-card { margin-bottom: 14px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .rot-head { background: var(--navy); color: white; padding: 9px 14px; font-weight: 700; font-size: 0.9rem; }
+    .rot-body { border: 1px solid #e0e0e0; border-top: none; background: white; }
+    .rot-row { display: flex; border-bottom: 1px solid #f0f0f0; }
+    .rot-row:last-child { border-bottom: none; }
+    .rot-pos { width: 80px; flex-shrink: 0; padding: 9px 12px; font-size: 0.8rem; font-weight: 700; color: #555; background: #f7f7f7; border-right: 1px solid #ebebeb; }
+    .rot-player { padding: 9px 12px; font-size: 0.88rem; flex: 1; }
+    .bench-bar { background: var(--gold-light); border: 1px solid #ffcc80; border-top: none; padding: 8px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .bench-label { font-size: 0.72rem; font-weight: 700; color: #888; text-transform: uppercase; }
+    .bench-chip { background: #ffcc80; padding: 3px 9px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+
+    .sum-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.86rem; }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-name { font-weight: 600; }
+    .sum-path { color: var(--muted); font-size: 0.8rem; }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; overflow-y: auto; padding: 16px; }
+    .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal { background: white; border-radius: 14px; width: 100%; max-width: 540px; padding: 20px; margin-top: 16px; }
+    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+
+    .field { margin-bottom: 14px; }
+    .field-label { display: block; font-weight: 600; font-size: 0.85rem; color: #444; margin-bottom: 6px; }
+    .text-input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; color: var(--text); background: white; }
+    .text-input:focus { outline: none; border-color: var(--navy); }
+
+    .pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .pos-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; transition: border-color 0.12s, background 0.12s; }
+    .pos-item input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: var(--navy); }
+    .pos-item.checked { border-color: var(--navy); background: #e8f0fe; }
+    .pos-item span { font-size: 0.9rem; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-bottom: 8px; }
+    .stat-cell { text-align: center; padding: 5px 2px; }
+    .stat-pos { font-size: 0.65rem; color: #888; font-weight: 600; }
+    .stat-val { font-size: 0.95rem; font-weight: 700; }
+
+    .form-err { color: var(--red); font-size: 0.84rem; margin-bottom: 8px; display: none; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <h1>⚾ Giants Lineup</h1>
+  </header>
+  <nav class="tab-bar">
+    <button class="tab-btn active" id="tab-roster" onclick="switchTab('roster')">Roster</button>
+    <button class="tab-btn" id="tab-games" onclick="switchTab('games')">Games</button>
+  </nav>
+  <main class="content" id="content"></main>
+</div>
+
+<!-- Player Modal -->
+<div class="overlay" id="p-overlay">
+  <div class="modal">
+    <div class="modal-title" id="p-title">Player</div>
+    <div class="field">
+      <label class="field-label">Name</label>
+      <input class="text-input" type="text" id="p-name" placeholder="Player name">
+    </div>
+    <div class="field">
+      <label class="field-label">Available positions</label>
+      <div class="pos-grid" id="p-pos-grid"></div>
+    </div>
+    <div id="p-stats-wrap" style="display:none">
+      <div class="divider"></div>
+      <div class="sh">Season history</div>
+      <div id="p-stats"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-err" id="p-err"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="savePlayer()">Save</button>
+      <button class="btn btn-ghost" onclick="closeOverlay('p-overlay')">Cancel</button>
+      <button class="btn btn-danger" id="p-del-btn" style="display:none" onclick="deletePlayer()">Delete Player</button>
+    </div>
+  </div>
+</div>
+
+<!-- Game Modal -->
+<div class="overlay" id="g-overlay">
+  <div class="modal">
+    <div class="modal-title" id="g-title">Game</div>
+    <div class="field">
+      <label class="field-label">Opponent (optional)</label>
+      <input class="text-input" type="text" id="g-opp" placeholder="e.g. Red Sox">
+    </div>
+    <div class="field">
+      <label class="field-label">Date</label>
+      <input class="text-input" type="date" id="g-date">
+    </div>
+    <div class="field">
+      <label class="field-label">Innings</label>
+      <input class="text-input" type="number" id="g-inn" value="6" min="1" max="12">
+    </div>
+    <div class="divider"></div>
+    <div class="form-err" id="g-err"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveGame()">Save</button>
+      <button class="btn btn-ghost" onclick="closeOverlay('g-overlay')">Cancel</button>
+      <button class="btn btn-danger" id="g-del-btn" style="display:none" onclick="deleteGame()">Delete Game</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const POSITIONS = ['Pitcher','Catcher','1B','2B','3B','SS','LF','CF-L','CF-R','RF'];
+const KEY = 'giants_v1';
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function buildSeedData() {
+  const players = [
+    { id: uid(), name: 'Quint',     positions: ['Pitcher','Catcher','1B','2B','3B','SS','LF','CF-L','CF-R'] },
+    { id: uid(), name: 'Logan',     positions: ['Pitcher','1B','2B','3B','SS','LF','CF-L','CF-R'] },
+    { id: uid(), name: 'Jordi',     positions: ['Pitcher','Catcher','1B','2B','3B','SS','LF','CF-L','CF-R'] },
+    { id: uid(), name: 'Grayson',   positions: ['Pitcher','1B','2B','3B','SS','LF','CF-L','CF-R'] },
+    { id: uid(), name: 'Nico',      positions: ['1B','2B','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Jonah',     positions: ['Pitcher','1B','2B','3B','SS','LF','CF-L','CF-R'] },
+    { id: uid(), name: 'Connor B.', positions: ['Catcher','2B','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Ethan',     positions: ['2B','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Connor C.', positions: ['1B','2B','3B','SS','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Freddie',   positions: ['1B','2B','3B','SS','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Noah',      positions: ['2B','LF','CF-L','CF-R','RF'] },
+    { id: uid(), name: 'Lincoln',   positions: ['2B','LF','CF-L','CF-R','RF'] },
+  ];
+
+  const n = (name) => players.find(p => p.name === name).id;
+
+  // Game 1 rotation pre-loaded from spreadsheet
+  // (Quint's innings 3-4 position corrected to 1B to resolve the duplicate 3B conflict with Grayson)
+  const g1rotations = [
+    {
+      label: 'Innings 1–2',
+      assignment: {
+        'Pitcher':  n('Logan'),
+        'Catcher':  n('Connor B.'),
+        '1B':       n('Jonah'),
+        '2B':       n('Ethan'),
+        '3B':       n('Quint'),
+        'SS':       n('Jordi'),
+        'LF':       n('Connor C.'),
+        'CF-L':     n('Freddie'),
+        'CF-R':     n('Nico'),
+        'RF':       n('Noah'),
+      },
+      bench: [n('Grayson'), n('Lincoln')],
+    },
+    {
+      label: 'Innings 3–4',
+      assignment: {
+        'Pitcher':  n('Jonah'),
+        'Catcher':  n('Jordi'),
+        '1B':       n('Quint'),
+        '2B':       n('Lincoln'),
+        '3B':       n('Grayson'),
+        'SS':       n('Logan'),
+        'LF':       n('Connor B.'),
+        'CF-L':     n('Ethan'),
+        'CF-R':     n('Connor C.'),
+        'RF':       n('Freddie'),
+      },
+      bench: [n('Nico'), n('Noah')],
+    },
+    {
+      label: 'Innings 5–6',
+      assignment: {
+        'Pitcher':  n('Quint'),
+        'Catcher':  n('Freddie'),
+        '1B':       n('Grayson'),
+        '2B':       n('Connor C.'),
+        '3B':       n('Jonah'),
+        'SS':       n('Connor B.'),
+        'LF':       n('Noah'),
+        'CF-L':     n('Nico'),
+        'CF-R':     n('Ethan'),
+        'RF':       n('Lincoln'),
+      },
+      bench: [n('Logan'), n('Jordi')],
+    },
+  ];
+
+  const games = [{
+    id: uid(),
+    opponent: '',
+    date: '',
+    innings: 6,
+    absentIds: [],
+    rotations: g1rotations,
+    label: 'Game 1',
+  }];
+
+  return { players, games };
+}
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
+
+let db = load() || buildSeedData();
+
+function getPlayer(id) { return db.players.find(p => p.id === id); }
+function getGame(id)   { return db.games.find(g => g.id === id); }
+
+function fmtDate(s) {
+  if (!s) return '';
+  const [y, m, d] = s.split('-');
+  return `${+m}/${+d}/${y}`;
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Season stats computed from all game rotations, optionally excluding one game
+function seasonStats(playerId, excludeId) {
+  let bench = 0;
+  const pos = Object.fromEntries(POSITIONS.map(p => [p, 0]));
+  db.games.forEach(g => {
+    if (g.id === excludeId || !g.rotations) return;
+    g.rotations.forEach(r => {
+      if (r.bench.includes(playerId)) bench++;
+      POSITIONS.forEach(p => { if (r.assignment[p] === playerId) pos[p]++; });
+    });
+  });
+  return { bench, pos };
+}
+
+// ─── Navigation ────────────────────────────────────────────────────────────────
+let activeTab = 'roster';
+let viewingGameId = null;
+let editingPlayerId = null;
+let editingGameId = null;
+
+function switchTab(tab) {
+  activeTab = tab; viewingGameId = null;
+  document.getElementById('tab-roster').classList.toggle('active', tab === 'roster');
+  document.getElementById('tab-games').classList.toggle('active', tab === 'games');
+  render();
+}
+
+// ─── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('content');
+  if (viewingGameId) renderGame(el);
+  else if (activeTab === 'roster') renderRoster(el);
+  else renderGameList(el);
+}
+
+function renderRoster(el) {
+  let h = '';
+  db.players.forEach(p => {
+    const posText = p.positions.length ? p.positions.join(', ') : 'No positions set';
+    h += `<div class="card flex-row">
+      <div><div class="pname">${esc(p.name)}</div><div class="ppos">${esc(posText)}</div></div>
+      <button class="btn btn-outline btn-sm" onclick="openPlayer('${p.id}')">Edit</button>
+    </div>`;
+  });
+  if (!h) h = `<div class="empty"><div class="empty-icon">🧢</div><h3>No players yet</h3><p>Add players to get started.</p></div>`;
+  h += `<button class="btn btn-primary" onclick="openPlayer(null)" style="margin-top:6px">+ Add Player</button>`;
+  el.innerHTML = h;
+}
+
+function renderGameList(el) {
+  const sorted = [...db.games].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  let h = '';
+  sorted.forEach(g => {
+    const title = g.opponent ? `vs. ${esc(g.opponent)}` : (g.label || 'Game');
+    const ready = g.rotations && g.rotations.length > 0;
+    h += `<div class="card flex-row" onclick="viewGame('${g.id}')" style="cursor:pointer">
+      <div>
+        <div class="gtitle">${title}</div>
+        <div class="gdetail">${fmtDate(g.date) || 'No date set'}${g.innings ? ` · ${g.innings} inn.` : ''}</div>
+      </div>
+      <span class="badge ${ready ? 'badge-ready' : 'badge-none'}">${ready ? '✓ Lineup' : 'No lineup'}</span>
+    </div>`;
+  });
+  if (!h) h = `<div class="empty"><div class="empty-icon">📅</div><h3>No games yet</h3><p>Add upcoming games to generate lineups.</p></div>`;
+  h += `<button class="btn btn-primary" onclick="openGame(null)" style="margin-top:6px">+ Add Game</button>`;
+  el.innerHTML = h;
+}
+
+function viewGame(id) { viewingGameId = id; render(); }
+function goBack()     { viewingGameId = null; render(); }
+
+function renderGame(el) {
+  const game = getGame(viewingGameId);
+  if (!game) { viewingGameId = null; render(); return; }
+
+  const present    = db.players.filter(p => !(game.absentIds || []).includes(p.id));
+  const benchCount = Math.max(0, present.length - 10);
+  const canGen     = present.length >= 10;
+  const title      = game.opponent ? `vs. ${esc(game.opponent)}` : (game.label || 'Game');
+  const hasRot     = game.rotations && game.rotations.length > 0;
+
+  let h = `<button class="back-btn" onclick="goBack()">← Games</button>`;
+
+  h += `<div class="card flex-row" style="margin-bottom:10px">
+    <div>
+      <div style="font-weight:700;font-size:1.05rem">${title}</div>
+      <div style="font-size:0.8rem;color:#666">${fmtDate(game.date) || 'No date set'} · ${game.innings} innings</div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="openGame('${game.id}')">Edit</button>
+  </div>`;
+
+  // Attendance
+  h += `<div class="sh">Who's playing today?</div><div class="card" style="padding:12px">`;
+  db.players.forEach(p => {
+    const away = (game.absentIds || []).includes(p.id);
+    h += `<div class="absent-item ${away ? 'away' : 'here'}" onclick="toggleAbsent('${game.id}','${p.id}')">
+      <span class="absent-name">${esc(p.name)}</span>
+      <span class="absent-tag">${away ? 'ABSENT' : 'PLAYING'}</span>
+    </div>`;
+  });
+  h += `<div style="font-size:0.78rem;color:#888;margin-top:8px">${present.length} present · ${benchCount} per rotation on bench</div>
+  </div>`;
+
+  if (!canGen) {
+    h += `<div class="alert alert-err">Need at least 10 players present. Currently have ${present.length}.</div>`;
+  }
+
+  h += `<button class="btn btn-success" ${canGen ? '' : 'disabled'} onclick="generateRotations('${game.id}')" style="margin-bottom:14px">
+    ${hasRot ? '↺ Regenerate Lineup' : 'Generate Lineup'}
+  </button>`;
+
+  if (game.label === 'Game 1' && hasRot) {
+    h += `<div class="alert alert-info" style="margin-bottom:12px">
+      Game 1 lineup is pre-loaded from your spreadsheet. Hit Regenerate to create a fresh one based on your season history.
+    </div>`;
+  }
+
+  if (hasRot) {
+    h += `<div class="sh">Lineup</div>`;
+    game.rotations.forEach(rot => {
+      h += `<div class="rot-card">
+        <div class="rot-head">${esc(rot.label)}</div>
+        <div class="rot-body">`;
+      POSITIONS.forEach(pos => {
+        const p = getPlayer(rot.assignment[pos]);
+        h += `<div class="rot-row">
+          <div class="rot-pos">${pos}</div>
+          <div class="rot-player">${p ? esc(p.name) : '—'}</div>
+        </div>`;
+      });
+      h += `</div>`;
+      if (rot.bench && rot.bench.length) {
+        h += `<div class="bench-bar"><span class="bench-label">Bench:</span>`;
+        rot.bench.forEach(id => {
+          const p = getPlayer(id);
+          h += `<span class="bench-chip">${p ? esc(p.name) : '?'}</span>`;
+        });
+        h += `</div>`;
+      }
+      h += `</div>`;
+    });
+
+    h += `<div class="sh" style="margin-top:20px">Player Summary</div><div class="card">`;
+    db.players.filter(p => !(game.absentIds || []).includes(p.id)).forEach(p => {
+      const rotPos = [], benchedAt = [];
+      game.rotations.forEach(r => {
+        if (r.bench.includes(p.id)) { benchedAt.push(r.label.replace('Innings ','').replace('Inning ','')); return; }
+        const pos = POSITIONS.find(pos => r.assignment[pos] === p.id);
+        if (pos) rotPos.push(pos);
+      });
+      let path = rotPos.join(' → ');
+      if (benchedAt.length) path += ` (bench inn. ${benchedAt.join(', ')})`;
+      h += `<div class="sum-row">
+        <span class="sum-name">${esc(p.name)}</span>
+        <span class="sum-path">${esc(path)}</span>
+      </div>`;
+    });
+    h += `</div>`;
+  }
+
+  el.innerHTML = h;
+}
+
+function toggleAbsent(gid, pid) {
+  const g = getGame(gid);
+  if (!g) return;
+  if (!g.absentIds) g.absentIds = [];
+  const i = g.absentIds.indexOf(pid);
+  if (i >= 0) g.absentIds.splice(i, 1); else g.absentIds.push(pid);
+  g.rotations = [];
+  save(); render();
+}
+
+// ─── Player modal ──────────────────────────────────────────────────────────────
+function openPlayer(id) {
+  editingPlayerId = id;
+  const p = id ? getPlayer(id) : null;
+  document.getElementById('p-title').textContent = id ? 'Edit Player' : 'Add Player';
+  document.getElementById('p-name').value = p ? p.name : '';
+  document.getElementById('p-del-btn').style.display = id ? 'block' : 'none';
+  document.getElementById('p-err').style.display = 'none';
+
+  const grid = document.getElementById('p-pos-grid');
+  grid.innerHTML = '';
+  POSITIONS.forEach(pos => {
+    const checked = p && p.positions.includes(pos);
+    const lbl = document.createElement('label');
+    lbl.className = 'pos-item' + (checked ? ' checked' : '');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.value = pos; cb.checked = checked;
+    cb.addEventListener('change', () => lbl.classList.toggle('checked', cb.checked));
+    const sp = document.createElement('span');
+    sp.textContent = pos;
+    lbl.append(cb, sp);
+    grid.appendChild(lbl);
+  });
+
+  const statsWrap = document.getElementById('p-stats-wrap');
+  if (id) {
+    const s = seasonStats(id);
+    const total = Object.values(s.pos).reduce((a, b) => a + b, 0) + s.bench;
+    if (total > 0) {
+      let sh = `<div class="stat-grid">`;
+      POSITIONS.forEach(pos => {
+        sh += `<div class="stat-cell"><div class="stat-pos">${pos}</div><div class="stat-val">${s.pos[pos]}</div></div>`;
+      });
+      sh += `</div><div style="font-size:0.8rem;color:#666">Bench appearances this season: ${s.bench}</div>`;
+      document.getElementById('p-stats').innerHTML = sh;
+      statsWrap.style.display = 'block';
+    } else {
+      statsWrap.style.display = 'none';
+    }
+  } else {
+    statsWrap.style.display = 'none';
+  }
+
+  document.getElementById('p-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('p-name').focus(), 80);
+}
+
+function savePlayer() {
+  const name  = document.getElementById('p-name').value.trim();
+  const errEl = document.getElementById('p-err');
+  if (!name) { errEl.textContent = 'Please enter a name.'; errEl.style.display = 'block'; return; }
+  const positions = [...document.querySelectorAll('#p-pos-grid input:checked')].map(i => i.value);
+  if (editingPlayerId) {
+    const p = getPlayer(editingPlayerId);
+    p.name = name; p.positions = positions;
+  } else {
+    db.players.push({ id: uid(), name, positions });
+  }
+  save(); closeOverlay('p-overlay'); render();
+}
+
+function deletePlayer() {
+  if (!editingPlayerId || !confirm('Delete this player? This cannot be undone.')) return;
+  db.games.forEach(g => {
+    if (g.absentIds) g.absentIds = g.absentIds.filter(id => id !== editingPlayerId);
+    if (g.rotations) g.rotations = g.rotations.map(r => ({
+      ...r,
+      bench: r.bench.filter(id => id !== editingPlayerId),
+      assignment: Object.fromEntries(
+        Object.entries(r.assignment).filter(([, id]) => id !== editingPlayerId)
+      ),
+    }));
+  });
+  db.players = db.players.filter(p => p.id !== editingPlayerId);
+  save(); closeOverlay('p-overlay'); render();
+}
+
+// ─── Game modal ────────────────────────────────────────────────────────────────
+function openGame(id) {
+  editingGameId = id;
+  const g = id ? getGame(id) : null;
+  document.getElementById('g-title').textContent = id ? 'Edit Game' : 'Add Game';
+  document.getElementById('g-opp').value  = g ? (g.opponent || '') : '';
+  document.getElementById('g-date').value = g ? (g.date || '') : '';
+  document.getElementById('g-inn').value  = g ? g.innings : 6;
+  document.getElementById('g-del-btn').style.display = id ? 'block' : 'none';
+  document.getElementById('g-err').style.display = 'none';
+  document.getElementById('g-overlay').classList.add('open');
+}
+
+function saveGame() {
+  const opp    = document.getElementById('g-opp').value.trim();
+  const date   = document.getElementById('g-date').value;
+  const innings = parseInt(document.getElementById('g-inn').value);
+  const errEl  = document.getElementById('g-err');
+  if (!innings || innings < 1) { errEl.textContent = 'Enter a valid number of innings.'; errEl.style.display = 'block'; return; }
+  if (editingGameId) {
+    const g = getGame(editingGameId);
+    g.opponent = opp; g.date = date; g.innings = innings; g.rotations = [];
+  } else {
+    db.games.push({ id: uid(), opponent: opp, date, innings, absentIds: [], rotations: [] });
+  }
+  save(); closeOverlay('g-overlay'); render();
+}
+
+function deleteGame() {
+  if (!editingGameId || !confirm('Delete this game?')) return;
+  db.games = db.games.filter(g => g.id !== editingGameId);
+  save(); closeOverlay('g-overlay'); viewingGameId = null; render();
+}
+
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(ov =>
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); })
+);
+
+// ─── Rotation generation ───────────────────────────────────────────────────────
+function generateRotations(gameId) {
+  const game = getGame(gameId);
+  if (!game) return;
+
+  const absent  = game.absentIds || [];
+  const present = db.players.filter(p => !absent.includes(p.id));
+  if (present.length < 10) { alert('Need at least 10 players present.'); return; }
+
+  const numRot   = Math.ceil(game.innings / 2);
+  const benchPer = present.length - 10;
+
+  // Season stats for all present players, excluding this game so past games inform but don't repeat
+  const stats = Object.fromEntries(present.map(p => [p.id, seasonStats(p.id, gameId)]));
+
+  const gameBench = Object.fromEntries(present.map(p => [p.id, 0]));
+  const gamePos   = Object.fromEntries(present.map(p => [p.id, Object.fromEntries(POSITIONS.map(pos => [pos, 0]))]));
+
+  const rotations = [];
+
+  for (let r = 0; r < numRot; r++) {
+    const bench = pickBench(present, benchPer, gameBench, stats);
+    const field  = present.filter(p => !bench.includes(p.id));
+    const assignment = assign(field, gamePos, stats);
+
+    if (!assignment) {
+      const s = r * 2 + 1, e = Math.min(r * 2 + 2, game.innings);
+      alert(`Cannot build a valid rotation for innings ${s}–${e}.\n\nMake sure enough players have each position checked in the Roster — especially Pitcher, Catcher, and infield spots.`);
+      return;
+    }
+
+    const s = r * 2 + 1, e = Math.min(r * 2 + 2, game.innings);
+    const label = s === e ? `Inning ${s}` : `Innings ${s}–${e}`;
+    rotations.push({ label, assignment, bench });
+
+    bench.forEach(id => gameBench[id]++);
+    Object.entries(assignment).forEach(([pos, id]) => gamePos[id][pos]++);
+  }
+
+  game.rotations = rotations;
+  delete game.label; // drop "Game 1" label once regenerated
+  save(); render();
+}
+
+function pickBench(players, count, gameBench, stats) {
+  if (count <= 0) return [];
+  // Shuffle first so ties are broken randomly, then sort by bench priority
+  const shuffled = [...players].sort(() => Math.random() - 0.5);
+  shuffled.sort((a, b) => {
+    const gd = gameBench[a.id] - gameBench[b.id];
+    return gd !== 0 ? gd : stats[a.id].bench - stats[b.id].bench;
+  });
+  return shuffled.slice(0, count).map(p => p.id);
+}
+
+function assign(field, gamePos, stats) {
+  // Tackle hardest-to-fill positions first (fewest eligible players)
+  const order = [...POSITIONS].sort((a, b) =>
+    field.filter(p => p.positions.includes(a)).length -
+    field.filter(p => p.positions.includes(b)).length
+  );
+
+  const asgn = {}, used = new Set();
+
+  function eligible(pos) {
+    return field
+      .filter(p => p.positions.includes(pos) && !used.has(p.id))
+      .map(p => ({
+        p,
+        // Lower score = prefer this player for this position
+        // Prioritize players who have played this position least (game then season)
+        score: gamePos[p.id][pos] * 10 + stats[p.id].pos[pos] + Math.random() * 0.4,
+      }))
+      .sort((a, b) => a.score - b.score)
+      .map(x => x.p);
+  }
+
+  function bt(i) {
+    if (i === POSITIONS.length) return true;
+    for (const p of eligible(order[i])) {
+      asgn[order[i]] = p.id; used.add(p.id);
+      if (bt(i + 1)) return true;
+      delete asgn[order[i]]; used.delete(p.id);
+    }
+    return false;
+  }
+
+  return bt(0) ? asgn : null;
+}
+
+// ─── Init ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
