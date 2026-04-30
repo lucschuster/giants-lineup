@@ -40,7 +40,7 @@
 
     /* ── Tabs ── */
     .tab-bar { display: flex; background: var(--navy-dark); position: sticky; top: 48px; z-index: 49; }
-    .tab-btn { flex: 1; padding: 11px 4px; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.85rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s; }
+    .tab-btn { flex: 1; padding: 11px 2px; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.78rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s; }
     .tab-btn.active { color: white; border-bottom-color: #64b5f6; }
 
     /* ── Content ── */
@@ -185,9 +185,10 @@
 <div id="app">
   <header class="app-header"><h1>⚾ Giants Lineup</h1></header>
   <nav class="tab-bar">
-    <button class="tab-btn active" id="tab-roster" onclick="switchTab('roster')">Roster</button>
-    <button class="tab-btn" id="tab-games"  onclick="switchTab('games')">Games</button>
-    <button class="tab-btn" id="tab-season" onclick="switchTab('season')">Season</button>
+    <button class="tab-btn active" id="tab-roster"    onclick="switchTab('roster')">Roster</button>
+    <button class="tab-btn" id="tab-games"     onclick="switchTab('games')">Games</button>
+    <button class="tab-btn" id="tab-season"    onclick="switchTab('season')">By Player</button>
+    <button class="tab-btn" id="tab-positions" onclick="switchTab('positions')">By Position</button>
   </nav>
   <main class="content" id="content"></main>
 </div>
@@ -381,7 +382,7 @@ let swapState = null; // { gameId, rotIdx, pos }
 
 function switchTab(tab) {
   activeTab = tab; viewingGameId = null;
-  ['roster','games','season'].forEach(t =>
+  ['roster','games','season','positions'].forEach(t =>
     document.getElementById(`tab-${t}`).classList.toggle('active', t === tab)
   );
   render();
@@ -392,8 +393,9 @@ function render() {
   const el = document.getElementById('content');
   if (viewingGameId)        renderGame(el);
   else if (activeTab === 'roster') renderRoster(el);
-  else if (activeTab === 'games')  renderGameList(el);
-  else                             renderSeason(el);
+  else if (activeTab === 'games')     renderGameList(el);
+  else if (activeTab === 'season')    renderSeason(el);
+  else                                renderPositions(el);
 }
 
 // ── Roster tab ─────────────────────────────────────────────────────────────────
@@ -700,6 +702,54 @@ function renderSeason(el) {
     h += `</div>
       <div class="season-total">${played} innings played · ${s.absent} absent</div>
     </div>`;
+  });
+
+  el.innerHTML = h;
+}
+
+// ── Positions tab ──────────────────────────────────────────────────────────────
+function renderPositions(el) {
+  const anyData = db.games.some(g => g.rotations && g.rotations.length > 0);
+  if (!anyData) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><h3>No season data yet</h3><p>Generate lineups for your games and they'll appear here.</p></div>`;
+    return;
+  }
+
+  // Pre-compute every player's season summary once
+  const summaries = Object.fromEntries(db.players.map(p => [p.id, playerSeasonSummary(p.id)]));
+
+  let h = '';
+  POSITIONS.forEach(pos => {
+    // Eligible players for this position, ranked by innings descending
+    const eligible = db.players
+      .filter(p => p.positions.includes(pos))
+      .map(p => ({ p, innings: summaries[p.id].pos[pos] }))
+      .sort((a, b) => b.innings - a.innings || a.p.name.localeCompare(b.p.name));
+
+    // Ineligible players who somehow have innings here (manual swaps)
+    const extras = db.players
+      .filter(p => !p.positions.includes(pos) && summaries[p.id].pos[pos] > 0)
+      .map(p => ({ p, innings: summaries[p.id].pos[pos] }))
+      .sort((a, b) => b.innings - a.innings);
+
+    const rows = [...eligible, ...extras];
+
+    h += `<div class="card" style="margin-bottom:10px">
+      <div style="font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:10px">${pos}</div>`;
+
+    rows.forEach((item, idx) => {
+      const isExtra  = !item.p.positions.includes(pos);
+      const hasInnings = item.innings > 0;
+      const isLast   = idx === rows.length - 1;
+      h += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;${isLast ? '' : 'border-bottom:1px solid #f0f0f0'}">
+        <span style="font-size:0.9rem;font-weight:${hasInnings ? '600' : '400'};color:${hasInnings ? 'var(--text)' : '#bbb'}">
+          ${idx + 1}.&nbsp;${esc(item.p.name)}${isExtra ? ' <span style="font-size:0.75rem;color:var(--muted)">(not listed)</span>' : ''}
+        </span>
+        <span style="font-size:0.95rem;font-weight:700;color:${hasInnings ? 'var(--navy)' : '#ccc'}">${item.innings} <span style="font-size:0.72rem;font-weight:400;color:#aaa">inn</span></span>
+      </div>`;
+    });
+
+    h += `</div>`;
   });
 
   el.innerHTML = h;
