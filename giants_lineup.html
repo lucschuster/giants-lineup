@@ -15,6 +15,8 @@
       --red: #c62828;
       --gold: #e65100;
       --gold-light: #fff3e0;
+      --grey: #9e9e9e;
+      --grey-light: #f5f5f5;
       --bg: #f0f4f8;
       --card: #ffffff;
       --border: #e0e0e0;
@@ -32,119 +34,145 @@
 
     #app { max-width: 580px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 
-    .app-header {
-      background: var(--navy);
-      color: white;
-      padding: 14px 16px 12px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
+    /* ── Header ── */
+    .app-header { background: var(--navy); color: white; padding: 14px 16px 12px; position: sticky; top: 0; z-index: 50; }
     .app-header h1 { font-size: 1.2rem; font-weight: 700; }
 
-    .tab-bar { display: flex; background: var(--navy-dark); }
-    .tab-btn {
-      flex: 1; padding: 11px; border: none; background: transparent;
-      color: rgba(255,255,255,0.5); font-size: 0.92rem; font-weight: 600;
-      cursor: pointer; border-bottom: 3px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-    }
+    /* ── Tabs ── */
+    .tab-bar { display: flex; background: var(--navy-dark); position: sticky; top: 48px; z-index: 49; }
+    .tab-btn { flex: 1; padding: 11px 4px; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 0.85rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s; }
     .tab-btn.active { color: white; border-bottom-color: #64b5f6; }
 
+    /* ── Content ── */
     .content { flex: 1; padding: 14px; }
 
+    /* ── Cards ── */
     .card { background: var(--card); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 
-    .btn {
-      display: block; width: 100%; padding: 13px 16px; border: none;
-      border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
-      text-align: center; transition: opacity 0.15s, transform 0.1s;
-    }
+    /* ── Buttons ── */
+    .btn { display: block; width: 100%; padding: 13px 16px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; text-align: center; transition: opacity 0.15s, transform 0.1s; }
     .btn:active { transform: scale(0.98); opacity: 0.88; }
     .btn-primary { background: var(--navy); color: white; }
     .btn-success { background: var(--green); color: white; }
-    .btn-danger { background: var(--red); color: white; }
+    .btn-danger  { background: var(--red); color: white; }
     .btn-outline { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
-    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
-    .btn-sm { padding: 8px 14px; font-size: 0.87rem; width: auto; display: inline-block; border-radius: 7px; }
-    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .btn-ghost   { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-sm      { padding: 8px 14px; font-size: 0.87rem; width: auto; display: inline-block; border-radius: 7px; }
+    .btn-row     { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
     .flex-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
+    /* ── Empty state ── */
     .empty { text-align: center; padding: 44px 24px; color: var(--muted); }
     .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
     .empty h3 { font-size: 1rem; font-weight: 600; color: #444; margin-bottom: 6px; }
     .empty p { font-size: 0.86rem; line-height: 1.5; }
 
+    /* ── Roster ── */
     .pname { font-weight: 600; font-size: 1rem; }
-    .ppos { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .ppos  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
 
-    .gtitle { font-weight: 600; font-size: 1rem; }
+    /* ── Leadoff card ── */
+    .leadoff-card { background: #e8f0fe; border: 1.5px solid #90b4e8; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+    .leadoff-label { font-size: 0.72rem; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .leadoff-select { width: 100%; padding: 9px 12px; border: 1.5px solid #90b4e8; border-radius: 8px; font-size: 1rem; font-weight: 600; color: var(--navy); background: white; }
+
+    /* ── Game list ── */
+    .gtitle  { font-weight: 600; font-size: 1rem; }
     .gdetail { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
     .badge { flex-shrink: 0; font-size: 0.73rem; font-weight: 700; padding: 4px 9px; border-radius: 12px; }
     .badge-ready { background: var(--green-light); color: var(--green); }
-    .badge-none { background: var(--gold-light); color: var(--gold); }
+    .badge-none  { background: var(--gold-light); color: var(--gold); }
 
-    .back-btn {
-      display: flex; align-items: center; gap: 5px; background: none; border: none;
-      color: var(--navy); font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      padding: 0; margin-bottom: 12px;
-    }
+    /* ── Back button ── */
+    .back-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; color: var(--navy); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0; margin-bottom: 12px; }
 
+    /* ── Section heading ── */
     .sh { font-size: 0.73rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; margin-top: 16px; }
     .sh:first-child { margin-top: 0; }
 
     .divider { height: 1px; background: var(--border); margin: 14px 0; }
 
+    /* ── Alerts ── */
     .alert { padding: 10px 14px; border-radius: 8px; font-size: 0.86rem; line-height: 1.5; margin-bottom: 12px; }
     .alert-warn { background: var(--gold-light); border: 1px solid #ffcc80; color: #7a3d00; }
     .alert-err  { background: #ffebee; border: 1px solid #ef9a9a; color: #b71c1c; }
     .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #0d47a1; }
 
-    .absent-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px;
-      cursor: pointer; user-select: none; margin-bottom: 6px;
-    }
+    /* ── Absent toggles ── */
+    .absent-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; margin-bottom: 6px; }
     .absent-item.away { border-color: #ef9a9a; background: #ffebee; }
     .absent-name { font-size: 0.9rem; font-weight: 500; }
     .absent-tag { font-size: 0.75rem; font-weight: 700; }
     .away .absent-tag { color: var(--red); }
     .here .absent-tag { color: var(--green); }
 
+    /* ── Rotation cards ── */
     .rot-card { margin-bottom: 14px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .rot-head { background: var(--navy); color: white; padding: 9px 14px; font-weight: 700; font-size: 0.9rem; }
+    .rot-head { background: var(--navy); color: white; padding: 9px 14px; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between; }
+    .rot-head.unplayed { background: var(--grey); }
+    .played-toggle { font-size: 0.73rem; font-weight: 600; background: rgba(255,255,255,0.2); border: none; color: white; padding: 3px 9px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
     .rot-body { border: 1px solid #e0e0e0; border-top: none; background: white; }
-    .rot-row { display: flex; border-bottom: 1px solid #f0f0f0; }
+    .rot-body.unplayed { opacity: 0.4; pointer-events: none; }
+    .rot-row { display: flex; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
     .rot-row:last-child { border-bottom: none; }
+    .rot-row:active { background: #f0f4ff; }
     .rot-pos { width: 80px; flex-shrink: 0; padding: 9px 12px; font-size: 0.8rem; font-weight: 700; color: #555; background: #f7f7f7; border-right: 1px solid #ebebeb; }
     .rot-player { padding: 9px 12px; font-size: 0.88rem; flex: 1; }
+    .rot-chevron { padding: 9px 10px 9px 0; color: #bbb; font-size: 0.85rem; }
     .bench-bar { background: var(--gold-light); border: 1px solid #ffcc80; border-top: none; padding: 8px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
     .bench-label { font-size: 0.72rem; font-weight: 700; color: #888; text-transform: uppercase; }
-    .bench-chip { background: #ffcc80; padding: 3px 9px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+    .bench-chip { background: #ffcc80; padding: 3px 9px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; cursor: pointer; }
+    .bench-chip:active { opacity: 0.7; }
 
+    /* ── Player summary ── */
     .sum-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.86rem; }
     .sum-row:last-child { border-bottom: none; }
     .sum-name { font-weight: 600; }
     .sum-path { color: var(--muted); font-size: 0.8rem; }
 
+    /* ── Swap modal ── */
+    .swap-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+    .swap-item:active { background: #f5f5f5; }
+    .swap-item.is-current { background: #e8f0fe; border-color: var(--navy); cursor: default; }
+    .swap-name { font-weight: 600; font-size: 0.95rem; }
+    .swap-pos-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    .swap-check { color: var(--navy); font-size: 1rem; }
+
+    /* ── Season summary ── */
+    .season-card { background: var(--card); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .season-name { font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
+    .sg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .sg-cell { text-align: center; background: var(--grey-light); border-radius: 6px; padding: 6px 4px; }
+    .sg-cell.active { background: #e8f0fe; }
+    .sg-cell.bench-cell { background: var(--gold-light); }
+    .sg-cell.absent-cell { background: #ffebee; }
+    .sg-pos { font-size: 0.6rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .sg-val { font-size: 1.05rem; font-weight: 700; margin-top: 2px; }
+    .sg-unit { font-size: 0.6rem; color: #aaa; }
+    .season-total { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+
+    /* ── Modal / overlay ── */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; overflow-y: auto; padding: 16px; }
     .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
     .modal { background: white; border-radius: 14px; width: 100%; max-width: 540px; padding: 20px; margin-top: 16px; }
     .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
 
+    /* ── Form ── */
     .field { margin-bottom: 14px; }
     .field-label { display: block; font-weight: 600; font-size: 0.85rem; color: #444; margin-bottom: 6px; }
     .text-input { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; color: var(--text); background: white; }
     .text-input:focus { outline: none; border-color: var(--navy); }
 
+    /* ── Position checkboxes ── */
     .pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
     .pos-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; transition: border-color 0.12s, background 0.12s; }
     .pos-item input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: var(--navy); }
     .pos-item.checked { border-color: var(--navy); background: #e8f0fe; }
     .pos-item span { font-size: 0.9rem; }
 
+    /* ── Season stats in player modal ── */
     .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-bottom: 8px; }
     .stat-cell { text-align: center; padding: 5px 2px; }
     .stat-pos { font-size: 0.65rem; color: #888; font-weight: 600; }
@@ -155,12 +183,11 @@
 </head>
 <body>
 <div id="app">
-  <header class="app-header">
-    <h1>⚾ Giants Lineup</h1>
-  </header>
+  <header class="app-header"><h1>⚾ Giants Lineup</h1></header>
   <nav class="tab-bar">
     <button class="tab-btn active" id="tab-roster" onclick="switchTab('roster')">Roster</button>
-    <button class="tab-btn" id="tab-games" onclick="switchTab('games')">Games</button>
+    <button class="tab-btn" id="tab-games"  onclick="switchTab('games')">Games</button>
+    <button class="tab-btn" id="tab-season" onclick="switchTab('season')">Season</button>
   </nav>
   <main class="content" id="content"></main>
 </div>
@@ -186,8 +213,8 @@
     <div class="form-err" id="p-err"></div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="savePlayer()">Save</button>
-      <button class="btn btn-ghost" onclick="closeOverlay('p-overlay')">Cancel</button>
-      <button class="btn btn-danger" id="p-del-btn" style="display:none" onclick="deletePlayer()">Delete Player</button>
+      <button class="btn btn-ghost"   onclick="closeOverlay('p-overlay')">Cancel</button>
+      <button class="btn btn-danger"  id="p-del-btn" style="display:none" onclick="deletePlayer()">Delete Player</button>
     </div>
   </div>
 </div>
@@ -212,8 +239,19 @@
     <div class="form-err" id="g-err"></div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="saveGame()">Save</button>
-      <button class="btn btn-ghost" onclick="closeOverlay('g-overlay')">Cancel</button>
-      <button class="btn btn-danger" id="g-del-btn" style="display:none" onclick="deleteGame()">Delete Game</button>
+      <button class="btn btn-ghost"   onclick="closeOverlay('g-overlay')">Cancel</button>
+      <button class="btn btn-danger"  id="g-del-btn" style="display:none" onclick="deleteGame()">Delete Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- Position Swap Modal -->
+<div class="overlay" id="swap-overlay">
+  <div class="modal">
+    <div class="modal-title" id="swap-title">Change Position</div>
+    <div id="swap-list"></div>
+    <div class="btn-row" style="margin-top:4px">
+      <button class="btn btn-ghost" onclick="closeOverlay('swap-overlay')">Cancel</button>
     </div>
   </div>
 </div>
@@ -242,72 +280,30 @@ function buildSeedData() {
     { id: uid(), name: 'Lincoln',   positions: ['2B','LF','CF-L','CF-R','RF'] },
   ];
 
-  const n = (name) => players.find(p => p.name === name).id;
-
-  // Game 1 rotation pre-loaded from spreadsheet
-  // (Quint's innings 3-4 position corrected to 1B to resolve the duplicate 3B conflict with Grayson)
-  const g1rotations = [
-    {
-      label: 'Innings 1–2',
-      assignment: {
-        'Pitcher':  n('Logan'),
-        'Catcher':  n('Connor B.'),
-        '1B':       n('Jonah'),
-        '2B':       n('Ethan'),
-        '3B':       n('Quint'),
-        'SS':       n('Jordi'),
-        'LF':       n('Connor C.'),
-        'CF-L':     n('Freddie'),
-        'CF-R':     n('Nico'),
-        'RF':       n('Noah'),
-      },
-      bench: [n('Grayson'), n('Lincoln')],
-    },
-    {
-      label: 'Innings 3–4',
-      assignment: {
-        'Pitcher':  n('Jonah'),
-        'Catcher':  n('Jordi'),
-        '1B':       n('Quint'),
-        '2B':       n('Lincoln'),
-        '3B':       n('Grayson'),
-        'SS':       n('Logan'),
-        'LF':       n('Connor B.'),
-        'CF-L':     n('Ethan'),
-        'CF-R':     n('Connor C.'),
-        'RF':       n('Freddie'),
-      },
-      bench: [n('Nico'), n('Noah')],
-    },
-    {
-      label: 'Innings 5–6',
-      assignment: {
-        'Pitcher':  n('Quint'),
-        'Catcher':  n('Freddie'),
-        '1B':       n('Grayson'),
-        '2B':       n('Connor C.'),
-        '3B':       n('Jonah'),
-        'SS':       n('Connor B.'),
-        'LF':       n('Noah'),
-        'CF-L':     n('Nico'),
-        'CF-R':     n('Ethan'),
-        'RF':       n('Lincoln'),
-      },
-      bench: [n('Logan'), n('Jordi')],
-    },
-  ];
+  const n = name => players.find(p => p.name === name).id;
 
   const games = [{
-    id: uid(),
-    opponent: '',
-    date: '',
-    innings: 6,
-    absentIds: [],
-    rotations: g1rotations,
-    label: 'Game 1',
+    id: uid(), opponent: '', date: '', innings: 6, absentIds: [], label: 'Game 1',
+    rotations: [
+      {
+        label: 'Innings 1–2', played: true,
+        assignment: { 'Pitcher': n('Logan'), 'Catcher': n('Connor B.'), '1B': n('Jonah'), '2B': n('Ethan'), '3B': n('Quint'), 'SS': n('Jordi'), 'LF': n('Connor C.'), 'CF-L': n('Freddie'), 'CF-R': n('Nico'), 'RF': n('Noah') },
+        bench: [n('Grayson'), n('Lincoln')],
+      },
+      {
+        label: 'Innings 3–4', played: true,
+        assignment: { 'Pitcher': n('Jonah'), 'Catcher': n('Jordi'), '1B': n('Quint'), '2B': n('Lincoln'), '3B': n('Grayson'), 'SS': n('Logan'), 'LF': n('Connor B.'), 'CF-L': n('Ethan'), 'CF-R': n('Connor C.'), 'RF': n('Freddie') },
+        bench: [n('Nico'), n('Noah')],
+      },
+      {
+        label: 'Innings 5–6', played: true,
+        assignment: { 'Pitcher': n('Quint'), 'Catcher': n('Freddie'), '1B': n('Grayson'), '2B': n('Connor C.'), '3B': n('Jonah'), 'SS': n('Connor B.'), 'LF': n('Noah'), 'CF-L': n('Nico'), 'CF-R': n('Ethan'), 'RF': n('Lincoln') },
+        bench: [n('Logan'), n('Jordi')],
+      },
+    ],
   }];
 
-  return { players, games };
+  return { players, games, leadoff: null };
 }
 
 function load() {
@@ -316,6 +312,7 @@ function load() {
 function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
 
 let db = load() || buildSeedData();
+if (!db.leadoff && db.leadoff !== null) db.leadoff = null; // migration safety
 
 function getPlayer(id) { return db.players.find(p => p.id === id); }
 function getGame(id)   { return db.games.find(g => g.id === id); }
@@ -325,20 +322,26 @@ function fmtDate(s) {
   const [y, m, d] = s.split('-');
   return `${+m}/${+d}/${y}`;
 }
-
 function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// Season stats computed from all game rotations, optionally excluding one game
+// How many innings does rotation rotIdx cover in this game?
+function rotInnings(game, rotIdx) {
+  const s = rotIdx * 2 + 1;
+  const e = Math.min(rotIdx * 2 + 2, game.innings);
+  return Math.max(0, e - s + 1);
+}
+
+// Season stats used by the generation algorithm (rotation counts, excludes one game)
 function seasonStats(playerId, excludeId) {
   let bench = 0;
   const pos = Object.fromEntries(POSITIONS.map(p => [p, 0]));
   db.games.forEach(g => {
     if (g.id === excludeId || !g.rotations) return;
-    g.rotations.forEach(r => {
+    g.rotations.forEach((r, ri) => {
+      if (r.played === false) return;
       if (r.bench.includes(playerId)) bench++;
       POSITIONS.forEach(p => { if (r.assignment[p] === playerId) pos[p]++; });
     });
@@ -346,56 +349,101 @@ function seasonStats(playerId, excludeId) {
   return { bench, pos };
 }
 
-// ─── Navigation ────────────────────────────────────────────────────────────────
+// Full season summary in innings (for the Season tab display)
+function playerSeasonSummary(playerId) {
+  let bench = 0, absent = 0;
+  const pos = Object.fromEntries(POSITIONS.map(p => [p, 0]));
+  db.games.forEach(g => {
+    if (!g.rotations || g.rotations.length === 0) return;
+    const isAbsent = (g.absentIds || []).includes(playerId);
+    g.rotations.forEach((r, ri) => {
+      if (r.played === false) return;
+      const inn = rotInnings(g, ri);
+      if (isAbsent) {
+        absent += inn;
+      } else if (r.bench.includes(playerId)) {
+        bench += inn;
+      } else {
+        POSITIONS.forEach(p => { if (r.assignment[p] === playerId) pos[p] += inn; });
+      }
+    });
+  });
+  const total = Object.values(pos).reduce((a,b) => a+b, 0) + bench;
+  return { pos, bench, absent, total };
+}
+
+// ── Navigation ──────────────────────────────────────────────────────────────────
 let activeTab = 'roster';
 let viewingGameId = null;
 let editingPlayerId = null;
 let editingGameId = null;
+let swapState = null; // { gameId, rotIdx, pos }
 
 function switchTab(tab) {
   activeTab = tab; viewingGameId = null;
-  document.getElementById('tab-roster').classList.toggle('active', tab === 'roster');
-  document.getElementById('tab-games').classList.toggle('active', tab === 'games');
+  ['roster','games','season'].forEach(t =>
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab)
+  );
   render();
 }
 
-// ─── Render ────────────────────────────────────────────────────────────────────
+// ── Render ──────────────────────────────────────────────────────────────────────
 function render() {
   const el = document.getElementById('content');
-  if (viewingGameId) renderGame(el);
+  if (viewingGameId)        renderGame(el);
   else if (activeTab === 'roster') renderRoster(el);
-  else renderGameList(el);
+  else if (activeTab === 'games')  renderGameList(el);
+  else                             renderSeason(el);
 }
 
+// ── Roster tab ─────────────────────────────────────────────────────────────────
 function renderRoster(el) {
-  let h = '';
+  // Leadoff card
+  const lo = db.leadoff ? getPlayer(db.leadoff) : null;
+  let h = `<div class="leadoff-card">
+    <div class="leadoff-label">⚾ Leadoff Batter — Next Game</div>
+    <select class="leadoff-select" onchange="setLeadoff(this.value)">
+      <option value="">Not selected</option>`;
   db.players.forEach(p => {
-    const posText = p.positions.length ? p.positions.join(', ') : 'No positions set';
-    h += `<div class="card flex-row">
-      <div><div class="pname">${esc(p.name)}</div><div class="ppos">${esc(posText)}</div></div>
-      <button class="btn btn-outline btn-sm" onclick="openPlayer('${p.id}')">Edit</button>
-    </div>`;
+    h += `<option value="${p.id}" ${db.leadoff === p.id ? 'selected' : ''}>${esc(p.name)}</option>`;
   });
-  if (!h) h = `<div class="empty"><div class="empty-icon">🧢</div><h3>No players yet</h3><p>Add players to get started.</p></div>`;
+  h += `</select></div>`;
+
+  // Player list
+  if (db.players.length === 0) {
+    h += `<div class="empty"><div class="empty-icon">🧢</div><h3>No players yet</h3><p>Add players to get started.</p></div>`;
+  } else {
+    db.players.forEach(p => {
+      const posText = p.positions.length ? p.positions.join(', ') : 'No positions set';
+      h += `<div class="card flex-row">
+        <div><div class="pname">${esc(p.name)}</div><div class="ppos">${esc(posText)}</div></div>
+        <button class="btn btn-outline btn-sm" onclick="openPlayer('${p.id}')">Edit</button>
+      </div>`;
+    });
+  }
   h += `<button class="btn btn-primary" onclick="openPlayer(null)" style="margin-top:6px">+ Add Player</button>`;
   el.innerHTML = h;
 }
 
+function setLeadoff(playerId) {
+  db.leadoff = playerId || null;
+  save();
+}
+
+// ── Games tab ──────────────────────────────────────────────────────────────────
 function renderGameList(el) {
   const sorted = [...db.games].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   let h = '';
   sorted.forEach(g => {
-    const title = g.opponent ? `vs. ${esc(g.opponent)}` : (g.label || 'Game');
-    const ready = g.rotations && g.rotations.length > 0;
+    const title  = g.opponent ? `vs. ${esc(g.opponent)}` : (g.label || 'Game');
+    const ready  = g.rotations && g.rotations.length > 0;
     h += `<div class="card flex-row" onclick="viewGame('${g.id}')" style="cursor:pointer">
-      <div>
-        <div class="gtitle">${title}</div>
-        <div class="gdetail">${fmtDate(g.date) || 'No date set'}${g.innings ? ` · ${g.innings} inn.` : ''}</div>
-      </div>
+      <div><div class="gtitle">${title}</div>
+      <div class="gdetail">${fmtDate(g.date) || 'No date set'}${g.innings ? ` · ${g.innings} inn.` : ''}</div></div>
       <span class="badge ${ready ? 'badge-ready' : 'badge-none'}">${ready ? '✓ Lineup' : 'No lineup'}</span>
     </div>`;
   });
-  if (!h) h = `<div class="empty"><div class="empty-icon">📅</div><h3>No games yet</h3><p>Add upcoming games to generate lineups.</p></div>`;
+  if (!h) h = `<div class="empty"><div class="empty-icon">📅</div><h3>No games yet</h3></div>`;
   h += `<button class="btn btn-primary" onclick="openGame(null)" style="margin-top:6px">+ Add Game</button>`;
   el.innerHTML = h;
 }
@@ -403,6 +451,7 @@ function renderGameList(el) {
 function viewGame(id) { viewingGameId = id; render(); }
 function goBack()     { viewingGameId = null; render(); }
 
+// ── Game detail ────────────────────────────────────────────────────────────────
 function renderGame(el) {
   const game = getGame(viewingGameId);
   if (!game) { viewingGameId = null; render(); return; }
@@ -416,10 +465,8 @@ function renderGame(el) {
   let h = `<button class="back-btn" onclick="goBack()">← Games</button>`;
 
   h += `<div class="card flex-row" style="margin-bottom:10px">
-    <div>
-      <div style="font-weight:700;font-size:1.05rem">${title}</div>
-      <div style="font-size:0.8rem;color:#666">${fmtDate(game.date) || 'No date set'} · ${game.innings} innings</div>
-    </div>
+    <div><div style="font-weight:700;font-size:1.05rem">${title}</div>
+    <div style="font-size:0.8rem;color:#666">${fmtDate(game.date) || 'No date set'} · ${game.innings} innings</div></div>
     <button class="btn btn-outline btn-sm" onclick="openGame('${game.id}')">Edit</button>
   </div>`;
 
@@ -435,58 +482,71 @@ function renderGame(el) {
   h += `<div style="font-size:0.78rem;color:#888;margin-top:8px">${present.length} present · ${benchCount} per rotation on bench</div>
   </div>`;
 
-  if (!canGen) {
-    h += `<div class="alert alert-err">Need at least 10 players present. Currently have ${present.length}.</div>`;
-  }
+  if (!canGen) h += `<div class="alert alert-err">Need at least 10 players present. Currently ${present.length}.</div>`;
 
   h += `<button class="btn btn-success" ${canGen ? '' : 'disabled'} onclick="generateRotations('${game.id}')" style="margin-bottom:14px">
     ${hasRot ? '↺ Regenerate Lineup' : 'Generate Lineup'}
   </button>`;
 
   if (game.label === 'Game 1' && hasRot) {
-    h += `<div class="alert alert-info" style="margin-bottom:12px">
-      Game 1 lineup is pre-loaded from your spreadsheet. Hit Regenerate to create a fresh one based on your season history.
-    </div>`;
+    h += `<div class="alert alert-info" style="margin-bottom:12px">Game 1 lineup pre-loaded from your spreadsheet. Tap rows to swap players. Hit Regenerate to start fresh.</div>`;
   }
 
+  // Rotations
   if (hasRot) {
-    h += `<div class="sh">Lineup</div>`;
-    game.rotations.forEach(rot => {
+    h += `<div class="sh">Lineup <span style="font-weight:400;color:#aaa;font-size:0.7rem;text-transform:none;letter-spacing:0">— tap any row to swap players</span></div>`;
+
+    game.rotations.forEach((rot, rotIdx) => {
+      const played  = rot.played !== false;
+      const gid     = game.id;
+
       h += `<div class="rot-card">
-        <div class="rot-head">${esc(rot.label)}</div>
-        <div class="rot-body">`;
+        <div class="rot-head ${played ? '' : 'unplayed'}">
+          <span>${esc(rot.label)}${played ? '' : ' — did not play'}</span>
+          <button class="played-toggle" onclick="toggleRotPlayed('${gid}',${rotIdx})">
+            ${played ? 'Mark not played' : 'Mark as played'}
+          </button>
+        </div>
+        <div class="rot-body ${played ? '' : 'unplayed'}">`;
+
       POSITIONS.forEach(pos => {
         const p = getPlayer(rot.assignment[pos]);
-        h += `<div class="rot-row">
+        h += `<div class="rot-row" onclick="${played ? `openSwap('${gid}',${rotIdx},'${pos}')` : ''}">
           <div class="rot-pos">${pos}</div>
           <div class="rot-player">${p ? esc(p.name) : '—'}</div>
+          <div class="rot-chevron">›</div>
         </div>`;
       });
+
       h += `</div>`;
+
       if (rot.bench && rot.bench.length) {
         h += `<div class="bench-bar"><span class="bench-label">Bench:</span>`;
-        rot.bench.forEach(id => {
+        rot.bench.forEach((id, bi) => {
           const p = getPlayer(id);
-          h += `<span class="bench-chip">${p ? esc(p.name) : '?'}</span>`;
+          h += `<span class="bench-chip" onclick="${played ? `openSwapBench('${gid}',${rotIdx},${bi})` : ''}" title="Tap to move to field">${p ? esc(p.name) : '?'}</span>`;
         });
         h += `</div>`;
       }
+
       h += `</div>`;
     });
 
+    // Player summary
     h += `<div class="sh" style="margin-top:20px">Player Summary</div><div class="card">`;
     db.players.filter(p => !(game.absentIds || []).includes(p.id)).forEach(p => {
       const rotPos = [], benchedAt = [];
       game.rotations.forEach(r => {
+        if (r.played === false) return;
         if (r.bench.includes(p.id)) { benchedAt.push(r.label.replace('Innings ','').replace('Inning ','')); return; }
         const pos = POSITIONS.find(pos => r.assignment[pos] === p.id);
         if (pos) rotPos.push(pos);
       });
       let path = rotPos.join(' → ');
-      if (benchedAt.length) path += ` (bench inn. ${benchedAt.join(', ')})`;
+      if (benchedAt.length) path += ` (bench: ${benchedAt.join(', ')})`;
       h += `<div class="sum-row">
         <span class="sum-name">${esc(p.name)}</span>
-        <span class="sum-path">${esc(path)}</span>
+        <span class="sum-path">${esc(path) || '—'}</span>
       </div>`;
     });
     h += `</div>`;
@@ -505,7 +565,147 @@ function toggleAbsent(gid, pid) {
   save(); render();
 }
 
-// ─── Player modal ──────────────────────────────────────────────────────────────
+function toggleRotPlayed(gameId, rotIdx) {
+  const game = getGame(gameId);
+  if (!game || !game.rotations[rotIdx]) return;
+  const rot = game.rotations[rotIdx];
+  rot.played = rot.played === false ? true : false;
+  save(); render();
+}
+
+// ── Position swap ──────────────────────────────────────────────────────────────
+function openSwap(gameId, rotIdx, pos) {
+  swapState = { gameId, rotIdx, pos };
+  const game    = getGame(gameId);
+  const rot     = game.rotations[rotIdx];
+  const present = db.players.filter(p => !(game.absentIds || []).includes(p.id));
+  const currentId = rot.assignment[pos];
+
+  document.getElementById('swap-title').textContent = `Change ${pos}`;
+
+  let h = '';
+  present.forEach(p => {
+    const isCurrent   = p.id === currentId;
+    const fieldPos    = POSITIONS.find(po => rot.assignment[po] === p.id);
+    const isBench     = rot.bench.includes(p.id);
+    const posLabel    = isCurrent ? `${pos} (current)` : fieldPos ? fieldPos : 'Bench';
+
+    h += `<div class="swap-item ${isCurrent ? 'is-current' : ''}" ${isCurrent ? '' : `onclick="doSwap('${p.id}')"`}>
+      <span class="swap-name">${esc(p.name)}</span>
+      <span class="swap-pos-label">${posLabel}${isCurrent ? ' ✓' : ''}</span>
+    </div>`;
+  });
+
+  document.getElementById('swap-list').innerHTML = h;
+  document.getElementById('swap-overlay').classList.add('open');
+}
+
+// Swap a bench player to a field position (tap bench chip)
+function openSwapBench(gameId, rotIdx, benchIdx) {
+  swapState = { gameId, rotIdx, pos: null, benchIdx };
+  const game    = getGame(gameId);
+  const rot     = game.rotations[rotIdx];
+  const benchId = rot.bench[benchIdx];
+  const benchP  = getPlayer(benchId);
+  const present = db.players.filter(p => !(game.absentIds || []).includes(p.id));
+
+  document.getElementById('swap-title').textContent = `Move ${benchP ? benchP.name : '?'} to field`;
+
+  let h = `<div style="font-size:0.84rem;color:var(--muted);margin-bottom:12px">Select a field player to swap with:</div>`;
+  POSITIONS.forEach(pos => {
+    const pid = rot.assignment[pos];
+    const p   = getPlayer(pid);
+    h += `<div class="swap-item" onclick="doBenchSwap('${pos}')">
+      <span class="swap-name">${pos}</span>
+      <span class="swap-pos-label">${p ? esc(p.name) : '—'}</span>
+    </div>`;
+  });
+
+  document.getElementById('swap-list').innerHTML = h;
+  document.getElementById('swap-overlay').classList.add('open');
+}
+
+function doSwap(newPlayerId) {
+  const { gameId, rotIdx, pos } = swapState;
+  const game     = getGame(gameId);
+  const rot      = game.rotations[rotIdx];
+  const oldId    = rot.assignment[pos];
+  const newInPos = POSITIONS.find(p => rot.assignment[p] === newPlayerId);
+  const newOnBench = rot.bench.includes(newPlayerId);
+
+  if (newInPos) {
+    // Swap two field players
+    rot.assignment[pos]    = newPlayerId;
+    rot.assignment[newInPos] = oldId;
+  } else if (newOnBench) {
+    // Swap field ↔ bench
+    rot.assignment[pos] = newPlayerId;
+    rot.bench = rot.bench.filter(id => id !== newPlayerId);
+    rot.bench.push(oldId);
+  }
+
+  save(); closeOverlay('swap-overlay'); render();
+}
+
+function doBenchSwap(fieldPos) {
+  const { gameId, rotIdx, benchIdx } = swapState;
+  const game    = getGame(gameId);
+  const rot     = game.rotations[rotIdx];
+  const benchId = rot.bench[benchIdx];
+  const fieldId = rot.assignment[fieldPos];
+
+  rot.assignment[fieldPos] = benchId;
+  rot.bench[benchIdx]      = fieldId;
+
+  save(); closeOverlay('swap-overlay'); render();
+}
+
+// ── Season tab ─────────────────────────────────────────────────────────────────
+function renderSeason(el) {
+  const anyData = db.games.some(g => g.rotations && g.rotations.length > 0);
+  if (!anyData) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><h3>No season data yet</h3><p>Generate lineups for your games and they'll appear here.</p></div>`;
+    return;
+  }
+
+  let h = '';
+  db.players.forEach(p => {
+    const s = playerSeasonSummary(p.id);
+    const played = Object.values(s.pos).reduce((a, b) => a + b, 0) + s.bench;
+
+    h += `<div class="season-card">
+      <div class="season-name">${esc(p.name)}</div>
+      <div class="sg">`;
+
+    POSITIONS.forEach(pos => {
+      const v = s.pos[pos];
+      h += `<div class="sg-cell ${v > 0 ? 'active' : ''}">
+        <div class="sg-pos">${pos}</div>
+        <div class="sg-val">${v}</div>
+        <div class="sg-unit">inn</div>
+      </div>`;
+    });
+
+    h += `<div class="sg-cell bench-cell">
+        <div class="sg-pos">Bench</div>
+        <div class="sg-val">${s.bench}</div>
+        <div class="sg-unit">inn</div>
+      </div>
+      <div class="sg-cell absent-cell">
+        <div class="sg-pos">Absent</div>
+        <div class="sg-val">${s.absent}</div>
+        <div class="sg-unit">inn</div>
+      </div>`;
+
+    h += `</div>
+      <div class="season-total">${played} innings played · ${s.absent} absent</div>
+    </div>`;
+  });
+
+  el.innerHTML = h;
+}
+
+// ── Player modal ───────────────────────────────────────────────────────────────
 function openPlayer(id) {
   editingPlayerId = id;
   const p = id ? getPlayer(id) : null;
@@ -523,10 +723,8 @@ function openPlayer(id) {
     const cb = document.createElement('input');
     cb.type = 'checkbox'; cb.value = pos; cb.checked = checked;
     cb.addEventListener('change', () => lbl.classList.toggle('checked', cb.checked));
-    const sp = document.createElement('span');
-    sp.textContent = pos;
-    lbl.append(cb, sp);
-    grid.appendChild(lbl);
+    const sp = document.createElement('span'); sp.textContent = pos;
+    lbl.append(cb, sp); grid.appendChild(lbl);
   });
 
   const statsWrap = document.getElementById('p-stats-wrap');
@@ -538,15 +736,11 @@ function openPlayer(id) {
       POSITIONS.forEach(pos => {
         sh += `<div class="stat-cell"><div class="stat-pos">${pos}</div><div class="stat-val">${s.pos[pos]}</div></div>`;
       });
-      sh += `</div><div style="font-size:0.8rem;color:#666">Bench appearances this season: ${s.bench}</div>`;
+      sh += `</div><div style="font-size:0.8rem;color:#666">Bench appearances: ${s.bench}</div>`;
       document.getElementById('p-stats').innerHTML = sh;
       statsWrap.style.display = 'block';
-    } else {
-      statsWrap.style.display = 'none';
-    }
-  } else {
-    statsWrap.style.display = 'none';
-  }
+    } else { statsWrap.style.display = 'none'; }
+  } else { statsWrap.style.display = 'none'; }
 
   document.getElementById('p-overlay').classList.add('open');
   setTimeout(() => document.getElementById('p-name').focus(), 80);
@@ -558,8 +752,7 @@ function savePlayer() {
   if (!name) { errEl.textContent = 'Please enter a name.'; errEl.style.display = 'block'; return; }
   const positions = [...document.querySelectorAll('#p-pos-grid input:checked')].map(i => i.value);
   if (editingPlayerId) {
-    const p = getPlayer(editingPlayerId);
-    p.name = name; p.positions = positions;
+    const p = getPlayer(editingPlayerId); p.name = name; p.positions = positions;
   } else {
     db.players.push({ id: uid(), name, positions });
   }
@@ -573,16 +766,15 @@ function deletePlayer() {
     if (g.rotations) g.rotations = g.rotations.map(r => ({
       ...r,
       bench: r.bench.filter(id => id !== editingPlayerId),
-      assignment: Object.fromEntries(
-        Object.entries(r.assignment).filter(([, id]) => id !== editingPlayerId)
-      ),
+      assignment: Object.fromEntries(Object.entries(r.assignment).filter(([, id]) => id !== editingPlayerId)),
     }));
   });
   db.players = db.players.filter(p => p.id !== editingPlayerId);
+  if (db.leadoff === editingPlayerId) db.leadoff = null;
   save(); closeOverlay('p-overlay'); render();
 }
 
-// ─── Game modal ────────────────────────────────────────────────────────────────
+// ── Game modal ─────────────────────────────────────────────────────────────────
 function openGame(id) {
   editingGameId = id;
   const g = id ? getGame(id) : null;
@@ -621,24 +813,19 @@ document.querySelectorAll('.overlay').forEach(ov =>
   ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); })
 );
 
-// ─── Rotation generation ───────────────────────────────────────────────────────
+// ── Rotation generation ────────────────────────────────────────────────────────
 function generateRotations(gameId) {
-  const game = getGame(gameId);
+  const game    = getGame(gameId);
   if (!game) return;
-
   const absent  = game.absentIds || [];
   const present = db.players.filter(p => !absent.includes(p.id));
   if (present.length < 10) { alert('Need at least 10 players present.'); return; }
 
   const numRot   = Math.ceil(game.innings / 2);
   const benchPer = present.length - 10;
-
-  // Season stats for all present players, excluding this game so past games inform but don't repeat
-  const stats = Object.fromEntries(present.map(p => [p.id, seasonStats(p.id, gameId)]));
-
+  const stats    = Object.fromEntries(present.map(p => [p.id, seasonStats(p.id, gameId)]));
   const gameBench = Object.fromEntries(present.map(p => [p.id, 0]));
   const gamePos   = Object.fromEntries(present.map(p => [p.id, Object.fromEntries(POSITIONS.map(pos => [pos, 0]))]));
-
   const rotations = [];
 
   for (let r = 0; r < numRot; r++) {
@@ -647,62 +834,51 @@ function generateRotations(gameId) {
     const assignment = assign(field, gamePos, stats);
 
     if (!assignment) {
-      const s = r * 2 + 1, e = Math.min(r * 2 + 2, game.innings);
-      alert(`Cannot build a valid rotation for innings ${s}–${e}.\n\nMake sure enough players have each position checked in the Roster — especially Pitcher, Catcher, and infield spots.`);
+      const s = r*2+1, e = Math.min(r*2+2, game.innings);
+      alert(`Can't build a valid rotation for innings ${s}–${e}.\n\nCheck that enough players have each position available in the Roster.`);
       return;
     }
 
-    const s = r * 2 + 1, e = Math.min(r * 2 + 2, game.innings);
-    const label = s === e ? `Inning ${s}` : `Innings ${s}–${e}`;
-    rotations.push({ label, assignment, bench });
-
+    const s = r*2+1, e = Math.min(r*2+2, game.innings);
+    rotations.push({ label: s===e ? `Inning ${s}` : `Innings ${s}–${e}`, assignment, bench, played: true });
     bench.forEach(id => gameBench[id]++);
     Object.entries(assignment).forEach(([pos, id]) => gamePos[id][pos]++);
   }
 
   game.rotations = rotations;
-  delete game.label; // drop "Game 1" label once regenerated
+  delete game.label;
   save(); render();
 }
 
 function pickBench(players, count, gameBench, stats) {
   if (count <= 0) return [];
-  // Shuffle first so ties are broken randomly, then sort by bench priority
-  const shuffled = [...players].sort(() => Math.random() - 0.5);
-  shuffled.sort((a, b) => {
+  const s = [...players].sort(() => Math.random() - 0.5);
+  s.sort((a, b) => {
     const gd = gameBench[a.id] - gameBench[b.id];
     return gd !== 0 ? gd : stats[a.id].bench - stats[b.id].bench;
   });
-  return shuffled.slice(0, count).map(p => p.id);
+  return s.slice(0, count).map(p => p.id);
 }
 
 function assign(field, gamePos, stats) {
-  // Tackle hardest-to-fill positions first (fewest eligible players)
   const order = [...POSITIONS].sort((a, b) =>
     field.filter(p => p.positions.includes(a)).length -
     field.filter(p => p.positions.includes(b)).length
   );
-
   const asgn = {}, used = new Set();
 
   function eligible(pos) {
     return field
       .filter(p => p.positions.includes(pos) && !used.has(p.id))
-      .map(p => ({
-        p,
-        // Lower score = prefer this player for this position
-        // Prioritize players who have played this position least (game then season)
-        score: gamePos[p.id][pos] * 10 + stats[p.id].pos[pos] + Math.random() * 0.4,
-      }))
-      .sort((a, b) => a.score - b.score)
-      .map(x => x.p);
+      .map(p => ({ p, score: gamePos[p.id][pos]*10 + stats[p.id].pos[pos] + Math.random()*0.4 }))
+      .sort((a, b) => a.score - b.score).map(x => x.p);
   }
 
   function bt(i) {
     if (i === POSITIONS.length) return true;
     for (const p of eligible(order[i])) {
       asgn[order[i]] = p.id; used.add(p.id);
-      if (bt(i + 1)) return true;
+      if (bt(i+1)) return true;
       delete asgn[order[i]]; used.delete(p.id);
     }
     return false;
@@ -711,7 +887,7 @@ function assign(field, gamePos, stats) {
   return bt(0) ? asgn : null;
 }
 
-// ─── Init ──────────────────────────────────────────────────────────────────────
+// ── Init ───────────────────────────────────────────────────────────────────────
 render();
 </script>
 </body>
